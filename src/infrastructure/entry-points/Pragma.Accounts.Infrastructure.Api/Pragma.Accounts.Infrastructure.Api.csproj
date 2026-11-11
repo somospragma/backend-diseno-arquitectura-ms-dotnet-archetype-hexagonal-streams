@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Entry point REST (Minimal APIs). Solo conoce casos de uso y modelo. -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\domain\Pragma.Accounts.Domain.UseCases\Pragma.Accounts.Domain.UseCases.csproj" />
+    <ProjectReference Include="..\..\helpers\Pragma.Accounts.Infrastructure.Helpers\Pragma.Accounts.Infrastructure.Helpers.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Pragma.Accounts.Tests" />
+  </ItemGroup>
+</Project>

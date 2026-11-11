@@ -1,0 +1,28 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/application/">
+    <Project Path="src/application/Pragma.Accounts.Application/Pragma.Accounts.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/domain/">
+    <Project Path="src/domain/Pragma.Accounts.Domain.Model/Pragma.Accounts.Domain.Model.csproj" />
+    <Project Path="src/domain/Pragma.Accounts.Domain.Ports/Pragma.Accounts.Domain.Ports.csproj" />
+    <Project Path="src/domain/Pragma.Accounts.Domain.UseCases/Pragma.Accounts.Domain.UseCases.csproj" />
+  </Folder>
+  <Folder Name="/src/infrastructure/" />
+  <Folder Name="/src/infrastructure/driven-adapters/">
+    <Project Path="src/infrastructure/driven-adapters/Pragma.Accounts.Infrastructure.Cache/Pragma.Accounts.Infrastructure.Cache.csproj" />
+    <Project Path="src/infrastructure/driven-adapters/Pragma.Accounts.Infrastructure.CreditScore/Pragma.Accounts.Infrastructure.CreditScore.csproj" />
+    <Project Path="src/infrastructure/driven-adapters/Pragma.Accounts.Infrastructure.EventStream/Pragma.Accounts.Infrastructure.EventStream.csproj" />
+    <Project Path="src/infrastructure/driven-adapters/Pragma.Accounts.Infrastructure.Messaging/Pragma.Accounts.Infrastructure.Messaging.csproj" />
+    <Project Path="src/infrastructure/driven-adapters/Pragma.Accounts.Infrastructure.Persistence/Pragma.Accounts.Infrastructure.Persistence.csproj" />
+  </Folder>
+  <Folder Name="/src/infrastructure/entry-points/">
+    <Project Path="src/infrastructure/entry-points/Pragma.Accounts.Infrastructure.Api/Pragma.Accounts.Infrastructure.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/infrastructure/helpers/">
+    <Project Path="src/infrastructure/helpers/Pragma.Accounts.Infrastructure.Helpers/Pragma.Accounts.Infrastructure.Helpers.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Pragma.Accounts.Tests/Pragma.Accounts.Tests.csproj" />
+  </Folder>
+</Solution>

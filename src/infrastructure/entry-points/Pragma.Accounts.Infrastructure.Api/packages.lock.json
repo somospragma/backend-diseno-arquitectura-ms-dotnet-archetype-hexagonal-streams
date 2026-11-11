@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "dependencies": {
+    "net10.0": {
+      "pragma.accounts.domain.model": {
+        "type": "Project"
+      },
+      "pragma.accounts.domain.ports": {
+        "type": "Project",
+        "dependencies": {
+          "Pragma.Accounts.Domain.Model": "[1.0.0, )"
+        }
+      },
+      "pragma.accounts.domain.usecases": {
+        "type": "Project",
+        "dependencies": {
+          "Pragma.Accounts.Domain.Model": "[1.0.0, )",
+          "Pragma.Accounts.Domain.Ports": "[1.0.0, )"
+        }
+      },
+      "pragma.accounts.infrastructure.helpers": {
+        "type": "Project"
+      }
+    }
+  }
+}

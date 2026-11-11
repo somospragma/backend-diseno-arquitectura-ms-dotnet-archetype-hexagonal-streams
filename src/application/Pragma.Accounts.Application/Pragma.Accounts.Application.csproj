@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <!-- Composition root: el unico proyecto que conoce todos los adapters. -->
+  <PropertyGroup>
+    <AssemblyName>Pragma.Accounts.Application</AssemblyName>
+    <UserSecretsId>pragma-accounts-streams</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\domain\Pragma.Accounts.Domain.UseCases\Pragma.Accounts.Domain.UseCases.csproj" />
+    <ProjectReference Include="..\..\infrastructure\driven-adapters\Pragma.Accounts.Infrastructure.Cache\Pragma.Accounts.Infrastructure.Cache.csproj" />
+    <ProjectReference Include="..\..\infrastructure\driven-adapters\Pragma.Accounts.Infrastructure.CreditScore\Pragma.Accounts.Infrastructure.CreditScore.csproj" />
+    <ProjectReference Include="..\..\infrastructure\driven-adapters\Pragma.Accounts.Infrastructure.EventStream\Pragma.Accounts.Infrastructure.EventStream.csproj" />
+    <ProjectReference Include="..\..\infrastructure\driven-adapters\Pragma.Accounts.Infrastructure.Messaging\Pragma.Accounts.Infrastructure.Messaging.csproj" />
+    <ProjectReference Include="..\..\infrastructure\driven-adapters\Pragma.Accounts.Infrastructure.Persistence\Pragma.Accounts.Infrastructure.Persistence.csproj" />
+    <ProjectReference Include="..\..\infrastructure\entry-points\Pragma.Accounts.Infrastructure.Api\Pragma.Accounts.Infrastructure.Api.csproj" />
+    <ProjectReference Include="..\..\infrastructure\helpers\Pragma.Accounts.Infrastructure.Helpers\Pragma.Accounts.Infrastructure.Helpers.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" />
+  </ItemGroup>
+</Project>

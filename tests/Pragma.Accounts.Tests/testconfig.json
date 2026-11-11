@@ -1,0 +1,15 @@
+{
+  "platformOptions": {
+    "Coverlet": {
+      "Include": "[Pragma.Accounts.*]*",
+      "Exclude": "[Pragma.Accounts.Tests]*",
+      "ExcludeByAttribute": "GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverageAttribute",
+      "ExcludeByFile": "**/Program.cs,**/obj/**",
+      "Format": "cobertura,opencover",
+      "ExcludeAssembliesWithoutSources": "MissingAll",
+      "Threshold": 90,
+      "ThresholdType": "line",
+      "ThresholdStat": "Total"
+    }
+  }
+}

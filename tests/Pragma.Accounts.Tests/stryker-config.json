@@ -1,0 +1,15 @@
+{
+  "stryker-config": {
+    "project": "Pragma.Accounts.Domain.UseCases.csproj",
+    "test-projects": ["Pragma.Accounts.Tests.csproj"],
+    "test-runner": "mtp",
+    "mutate": ["**/*.cs"],
+    "ignore-methods": ["*ConfigureAwait"],
+    "reporters": ["progress", "html", "json"],
+    "thresholds": {
+      "high": 80,
+      "low": 60,
+      "break": 60
+    }
+  }
+}

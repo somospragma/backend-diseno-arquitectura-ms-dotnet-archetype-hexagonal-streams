@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Dominio puro: sin dependencias de frameworks ni de infraestructura. -->
+  <PropertyGroup>
+    <RootNamespace>Pragma.Accounts.Domain.Model</RootNamespace>
+  </PropertyGroup>
+</Project>

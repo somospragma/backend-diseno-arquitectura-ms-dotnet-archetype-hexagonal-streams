@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Casos de uso: orquestan el dominio a traves de los puertos. Sin frameworks. -->
+  <ItemGroup>
+    <ProjectReference Include="..\Pragma.Accounts.Domain.Model\Pragma.Accounts.Domain.Model.csproj" />
+    <ProjectReference Include="..\Pragma.Accounts.Domain.Ports\Pragma.Accounts.Domain.Ports.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,115 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  quality:
+    name: Build, tests y quality gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+      # CI=true activa RestoreLockedMode: falla si los lockfiles no coinciden.
+      - run: dotnet restore Pragma.Accounts.slnx
+      - run: dotnet tool restore
+      - name: Format (dotnet format)
+        run: dotnet format Pragma.Accounts.slnx --verify-no-changes --no-restore
+      # Warnings como errores + analizadores .NET + NuGetAudit (falla con dependencias vulnerables).
+      - name: Build
+        run: dotnet build Pragma.Accounts.slnx -c Release --no-restore
+      # Unitarios, integracion (WebApplicationFactory) y arquitectura (ArchUnitNET).
+      # Gate de cobertura 90%% de lineas en tests/Pragma.Accounts.Tests/testconfig.json (coverlet.MTP).
+      - name: Test & coverage gate (90%%)
+        run: dotnet test --solution Pragma.Accounts.slnx -c Release --no-build --coverlet
+      - name: Mutation testing (domain, umbral 60%%)
+        working-directory: tests/Pragma.Accounts.Tests
+        run: dotnet stryker --configuration Release
+      # SCA sobre los packages.lock.json (dependencias reales, incluidas transitivas).
+      - name: Dependency scan (trivy, HIGH/CRITICAL)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+      - name: SBOM (CycloneDX)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: cyclonedx
+          output: sbom.cdx.json
+      - name: Publicar SBOM
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: sbom-cyclonedx
+          path: sbom.cdx.json
+
+  sonar:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    env:
+      # A nivel de job: un `if` de paso no ve el `env` declarado dentro del propio paso.
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # SONAR_TOKEN y SONAR_ORGANIZATION son secretos de la organizacion de GitHub.
+      SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+      SONAR_HOST_URL: https://sonarcloud.io
+      # Convencion de SonarCloud para repos importados de GitHub: <organizacion>_<repo>
+      SONAR_PROJECT_KEY: ${{ secrets.SONAR_ORGANIZATION }}_${{ github.event.repository.name }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+      - run: dotnet tool restore
+      - name: SonarCloud analysis
+        if: env.SONAR_TOKEN != ''
+        # TEMPORAL: no bloqueante, igual que en los arquetipos Java.
+        continue-on-error: true
+        run: |
+          dotnet sonarscanner begin /k:"$SONAR_PROJECT_KEY" /o:"$SONAR_ORGANIZATION" \
+            /d:sonar.host.url="$SONAR_HOST_URL" /d:sonar.token="$SONAR_TOKEN" \
+            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover*.xml" \
+            /d:sonar.exclusions="**/bin/**,**/obj/**" /d:sonar.coverage.exclusions="**/Program.cs,tests/**"
+          dotnet build Pragma.Accounts.slnx -c Release
+          dotnet test --solution Pragma.Accounts.slnx -c Release --no-build --coverlet
+          dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"
+
+  secrets:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Install gitleaks (version y checksum fijos)
+        env:
+          GITLEAKS_VERSION: 8.30.1
+          GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+        run: |
+          curl -sSfL -o /tmp/gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  /tmp/gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/gitleaks.tar.gz -C /tmp gitleaks
+      - name: Secret scan (gitleaks)
+        run: /tmp/gitleaks git --redact --verbose --exit-code 1

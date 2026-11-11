@@ -1,0 +1,26 @@
+# Build
+bin/
+obj/
+artifacts/
+publish/
+
+# Tests, cobertura y mutation testing
+TestResults/
+StrykerOutput/
+coverage*.xml
+*.trx
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.DotSettings.user
+
+# Entorno local (nunca commitear valores reales)
+.env
+!.env.example
+appsettings.Local.json
+
+.DS_Store

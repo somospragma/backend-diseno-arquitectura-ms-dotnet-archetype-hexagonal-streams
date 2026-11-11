@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Puertos de salida: contratos que implementan los driven adapters. -->
+  <ItemGroup>
+    <ProjectReference Include="..\Pragma.Accounts.Domain.Model\Pragma.Accounts.Domain.Model.csproj" />
+  </ItemGroup>
+</Project>
